@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15 August Quiz Competition 🇮🇳</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#ff9933,#fff,#138808)}
+.container{width:95%;max-width:700px;background:#fff;padding:25px;border-radius:20px;box-shadow:0 8px 25px #0003}
+h1{text-align:center;color:#0b5d1e}.subtitle{text-align:center;font-size:18px}
+input[type=text]{width:100%;padding:13px;margin:15px 0;border:2px solid #ddd;border-radius:10px;font-size:16px}
+button{width:100%;padding:13px;border:0;border-radius:10px;background:#138808;color:#fff;font-size:18px;cursor:pointer}
+button:hover{background:#0b6505}.timer{text-align:right;font-size:20px;font-weight:bold;color:#d32f2f;margin-bottom:15px}
+.question{font-size:19px;font-weight:bold;margin-bottom:15px}.progress{margin-bottom:15px;font-weight:bold}
+.option{display:block;padding:12px;margin:10px 0;border:2px solid #ddd;border-radius:10px;cursor:pointer}
+.option:hover{background:#f1f1f1}#quiz,#result{display:none}.score{text-align:center;font-size:28px;color:#138808;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="container">
+<div id="start">
+<h1>🇮🇳 15 August Quiz Competition 🇮🇳</h1>
+<p class="subtitle">स्वतंत्रता दिवस प्रश्नोत्तरी<br>Independence Day Quiz</p>
+<input type="text" id="name" placeholder="Enter Your Name / अपना नाम लिखें">
+<button onclick="startQuiz()">Start Quiz 🚀</button>
+</div>
+<div id="quiz">
+<div class="timer">⏱️ Time: <span id="time">02:00</span></div>
+<div class="progress">Question <span id="number">1</span> / 20</div>
+<div class="question" id="question"></div><div id="options"></div><br>
+<button onclick="nextQuestion()">Next ➡️</button>
+</div>
+<div id="result">
+<h1>🎉 Quiz Completed! 🎉</h1><p id="welcome" style="text-align:center"></p>
+<div class="score"><span id="score"></span> / 20</div>
+<p id="message" style="text-align:center"></p>
+<button onclick="location.reload()">Play Again 🔄</button>
+</div>
+</div>
+<script>
+const questions=[
+["भारत को स्वतंत्रता कब मिली? / When did India get independence?",["15 August 1947","26 January 1950","2 October 1947","14 August 1947"],0],
+["भारत के पहले प्रधानमंत्री कौन थे? / Who was the first Prime Minister of India?",["Mahatma Gandhi","Jawaharlal Nehru","Sardar Patel","Dr. Rajendra Prasad"],1],
+["भारत का राष्ट्रीय ध्वज किसने डिजाइन किया था? / Who designed the Indian National Flag?",["Pingali Venkayya","Rabindranath Tagore","Mahatma Gandhi","B. R. Ambedkar"],0],
+["भारत का राष्ट्रीय गीत कौन सा है? / What is India's National Song?",["Jana Gana Mana","Vande Mataram","Saare Jahan Se Achha","Ae Mere Watan"],1],
+["भारत का राष्ट्रगान कौन सा है? / What is India's National Anthem?",["Vande Mataram","Jana Gana Mana","Maa Tujhe Salaam","Sare Jahan Se Achha"],1],
+["15 अगस्त को भारत क्या मनाता है? / What does India celebrate on 15 August?",["Republic Day","Independence Day","Gandhi Jayanti","Constitution Day"],1],
+["महात्मा गांधी को किस नाम से भी जाना जाता है? / Mahatma Gandhi is also known as?",["Netaji","Bapu","Lokmanya","Sardar"],1],
+["भारत छोड़ो आंदोलन कब शुरू हुआ था? / When was the Quit India Movement launched?",["1942","1930","1919","1947"],0],
+["भारत का संविधान कब लागू हुआ? / When did the Constitution of India come into effect?",["15 August 1947","26 January 1950","26 November 1949","2 October 1950"],1],
+["जलियांवाला बाग हत्याकांड किस वर्ष हुआ था? / In which year did the Jallianwala Bagh massacre occur?",["1919","1920","1930","1942"],0],
+["सुभाष चंद्र बोस को किस नाम से जाना जाता था? / Subhas Chandra Bose was popularly known as?",["Bapu","Netaji","Sardar","Guruji"],1],
+["दांडी मार्च किस आंदोलन से संबंधित था? / Dandi March was related to which movement?",["Non-Cooperation Movement","Salt Satyagraha","Quit India Movement","Swadeshi Movement"],1],
+["भारत का राष्ट्रीय प्रतीक किससे लिया गया है? / India's national emblem is adapted from?",["Red Fort","Lion Capital of Ashoka","India Gate","Qutub Minar"],1],
+["भारतीय राष्ट्रीय ध्वज में कितने रंग हैं? / How many colours are there in the Indian National Flag?",["2","3","4","5"],1],
+["अशोक चक्र में कितनी तीलियाँ होती हैं? / How many spokes are there in the Ashoka Chakra?",["20","24","26","28"],1],
+["भारत के अंतिम ब्रिटिश वायसराय कौन थे? / Who was the last Viceroy of British India?",["Lord Curzon","Lord Mountbatten","Lord Wellesley","Lord Dalhousie"],1],
+["स्वतंत्र भारत के पहले राष्ट्रपति कौन थे? / Who was the first President of independent India?",["Dr. Rajendra Prasad","Jawaharlal Nehru","Sardar Patel","Dr. S. Radhakrishnan"],0],
+["‘स्वराज मेरा जन्मसिद्ध अधिकार है’ किसने कहा था? / Who said 'Swaraj is my birthright'?",["Bal Gangadhar Tilak","Mahatma Gandhi","Bhagat Singh","Subhas Chandra Bose"],0],
+["भगत सिंह को किन क्रांतिकारियों के साथ फाँसी दी गई थी? / Bhagat Singh was executed along with?",["Rajguru and Sukhdev","Gandhi and Nehru","Azad and Bose","Patel and Tilak"],0],
+["भारत का स्वतंत्रता दिवस हर वर्ष किस तारीख को मनाया जाता है? / Independence Day is celebrated every year on?",["26 January","15 August","2 October","14 November"],1]
+].map(x=>({q:x[0],options:x[1],answer:x[2]}));
+let current=0,score=0,timeLeft=120,timer,playerName="";
+function startQuiz(){playerName=document.getElementById("name").value.trim();if(!playerName){alert("Please enter your name / कृपया अपना नाम लिखें!");return}document.getElementById("start").style.display="none";document.getElementById("quiz").style.display="block";showQuestion();timer=setInterval(()=>{timeLeft--;document.getElementById("time").textContent=String(Math.floor(timeLeft/60)).padStart(2,"0")+":"+String(timeLeft%60).padStart(2,"0");if(timeLeft<=0){clearInterval(timer);finishQuiz()}},1000)}
+function showQuestion(){let q=questions[current];document.getElementById("number").textContent=current+1;document.getElementById("question").textContent=q.q;document.getElementById("options").innerHTML=q.options.map((o,i)=>`<label class="option"><input type="radio" name="answer" value="${i}"> ${o}</label>`).join("")}
+function nextQuestion(){let s=document.querySelector('input[name="answer"]:checked');if(!s){alert("Please select an answer / कृपया उत्तर चुनें!");return}if(+s.value===questions[current].answer)score++;current++;if(current>=questions.length)finishQuiz();else showQuestion()}
+function finishQuiz(){clearInterval(timer);document.getElementById("quiz").style.display="none";document.getElementById("result").style.display="block";document.getElementById("welcome").textContent="Well done, "+playerName+"! 🇮🇳";document.getElementById("score").textContent=score;document.getElementById("message").textContent=score>=18?"🏆 Excellent! You are a true India Quiz Champion!":score>=14?"👏 Great job! Keep learning about India!":score>=10?"👍 Good effort! Try again and improve your score.":"💪 Keep practicing! You can do better next time."}
+</script>
+</body>
+</html>
